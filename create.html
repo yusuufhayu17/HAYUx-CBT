@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="create.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">HAYUx CBT</div>
+  <button class="menu-toggle" aria-label="Menu">&#9776;</button>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="create.html">Create Quiz</a>
+    <a href="download.html">Download PDFs</a>
+    <a href="contact.html">Contact</a>
+    <input type="text" id="search-bar" placeholder="Search courses...">
+  </div>
+</nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
+                <div class="tab" onclick="showTab('import')">Import</div>
+                <div class="tab" id="quizTab" style="display:none;" onclick="showTab('quiz')">Quiz</div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab">
+                <div class="dashboard-header">
+                    <h2>Create Quiz</h2>
+                    <p>Prepare for your exams with this offline-capable CBT simulator.</p>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Quiz Settings</h3>
+                    <div class="mode-selection">
+                        <div class="mode-card active" data-mode="cbt" onclick="setMode('cbt')">
+                            <i class="fas fa-stopwatch"></i>
+                            <h4>Exam Mode</h4>
+                            <p>Timed test with final score</p>
+                        </div>
+                        <div class="mode-card" data-mode="practice" onclick="setMode('practice')">
+                            <i class="fas fa-book-open"></i>
+                            <h4>Practice Mode</h4>
+                            <p>Learn with explanations</p>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <label>Number of Questions:</label>
+                            <span class="slider-value" id="questionCountDisplay">10</span>
+                        </div>
+                        <input type="range" min="5" max="50" value="10" id="questionCountSlider" class="slider">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Your Courses</h3>
+                    <div id="courseButtonsContainer" class="courses-grid"></div>
+                </div>
+
+                <div class="danger-zone">
+                    <button class="btn btn-danger" id="resetAllBtn">
+                        <i class="fas fa-bomb"></i> Reset All Courses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Import Tab -->
+            <div id="importTab" style="display:none;">
+                <h2>Import Questions</h2>
+                <p>Add your questions using one of these methods:</p>
+                
+                <div class="import-options">
+                    <div class="import-option" onclick="showTextImport()">
+                        <i class="fas fa-paste"></i>
+                        <h4>Paste Text</h4>
+                        <p>Copy-paste questions in simple format</p>
+                    </div>
+                    <div class="import-option" id="fileImportOption">
+                        <i class="fas fa-file-import"></i>
+                        <h4>Text File</h4>
+                        <p>Import from .txt file</p>
+                        <input type="file" id="fileImport" accept=".txt" style="display:none;">
+                    </div>
+                </div>
+
+                <div id="textImportArea" class="text-import-area" style="display:none;">
+                    <div class="form-group">
+                        <label>Course Name:</label>
+                        <input type="text" id="courseName" placeholder="e.g. Mathematics 101" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Questions:</label>
+                        <textarea id="mcqText" class="form-control" rows="10" placeholder="Paste questions here in format:
+Q1. What is 2+2?
+*A. 4
+B. 5
+C. 6
+
+Q2. Capital of France?
+A. London
+*B. Paris
+C. Berlin"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="importQuestions()">
+                        <i class="fas fa-file-import"></i> Import Questions
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="quizTabContent" style="display:none;">
+                <div class="quiz-header">
+                    <h2 id="quizTitle"></h2>
+                    <div class="timer-container">
+                        <button class="btn btn-outline" id="fullscreenBtn" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <i class="fas fa-stopwatch"></i>
+                        <div class="timer-text" id="timerDisplay">00:00</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-text" id="questionArea"></div>
+                    <div class="options-container" id="optionsArea"></div>
+                </div>
+
+                <div class="question-nav" id="navPanel"></div>
+
+                <div class="quiz-nav">
+                    <button class="btn btn-outline" onclick="prevQuestion()">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <div>
+                        <button class="btn btn-danger" onclick="clearCurrentCourse()">
+                            <i class="fas fa-trash"></i> Clear Course
+                        </button>
+                        <button class="btn btn-success" onclick="submitQuiz()">
+                            <i class="fas fa-check"></i> Submit
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextQuestion()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="create.js"></script>
+  
+</body>
+</html>

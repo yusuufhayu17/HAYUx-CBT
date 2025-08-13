@@ -1,0 +1,2013 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Quizzer | Offline CBT Simulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .tabs {
+    box-shadow: none !important;
+}
+
+#quizTabContent .tabs {
+    box-shadow: none !important;
+}
+        .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+}
+
+.tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome/Safari */
+}
+
+.tab {
+    display: inline-block; /* Ensure tabs stay in line */
+    flex-shrink: 0; /* Prevent tabs from shrinking */
+}
+.tabs {
+    box-shadow: none !important;
+}
+        /* Fullscreen mode adjustments */
+        #quizTabContent:fullscreen {
+          width: 100%;
+          height: 100%;
+          padding: 20px;
+          overflow: auto;
+          background: var(--bg-color);
+        }
+
+        #quizTabContent:fullscreen .quiz-nav {
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          right: 20px;
+          background: var(--card-bg);
+          padding: 15px;
+          border-radius: var(--radius);
+          box-shadow: var(--shadow);
+          z-index: 1000;
+          display: flex;
+          justify-content: space-between;
+        }
+
+        #quizTabContent:fullscreen .quiz-nav > div {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        /* Ensure content doesn't hide behind navigation */
+        #quizTabContent:fullscreen .question-container {
+          margin-bottom: 100px; /* Space for fixed nav */
+        }
+        /* Add to your <style> section */
+        html, body {
+            overscroll-behavior: none; /* Blocks rubber-band effect */
+            touch-action: pan-y; /* Allows ONLY vertical scrolling */
+        }
+        :root {
+            --primary: #4361ee;
+            --primary-light: #5a67d8;
+            --primary-dark: #3a56d4;
+            --danger: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --bg-color: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        /* Dark mode */
+        [data-theme="dark"] {
+            --primary: #5a67d8;
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --border-color: #4a5568;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Dashboard */
+        .dashboard-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-header h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Course cards */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .course-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .course-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Quiz settings */
+        .settings-section {
+            margin: 2rem 0;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Mode selection */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .mode-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .mode-card.active {
+            border: 2px solid var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .mode-card i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        /* Slider */
+        .slider-container {
+            margin: 2rem 0;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border-color);
+            outline: none;
+            margin: 1rem 0;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .slider-value {
+            font-weight: bold;
+            color: var(--primary);
+            background: rgba(67, 97, 238, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        /* Import section */
+        .import-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .import-option {
+            border: 1px dashed var(--border-color);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .import-option:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .import-option i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .import-option.whatsapp i {
+            color: #25D366;
+        }
+
+        /* Text import area */
+        .text-import-area {
+            display: none;
+            margin-top: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        /* Quiz section */
+        #quizSection {
+            display: none;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Timer */
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(67, 97, 238, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+        }
+
+        .timer-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .timer.warning {
+            color: var(--warning);
+        }
+
+        .timer.danger {
+            color: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Question */
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Options */
+        .options-container {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .option {
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .option.selected {
+            background-color: rgba(67, 97, 238, 0.2);
+            border-color: var(--primary);
+        }
+
+        .option.correct {
+            background-color: rgba(76, 201, 240, 0.2);
+            border-color: var(--success);
+        }
+
+        .option.incorrect {
+            background-color: rgba(247, 37, 133, 0.1);
+            border-color: var(--danger);
+        }
+
+        /* Navigation */
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .question-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .nav-btn.answered {
+            background-color: rgba(76, 201, 240, 0.2);
+            border-color: var(--success);
+        }
+
+        .nav-btn.current {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Progress bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* AI Helper */
+        .ai-helper {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            display: none;
+        }
+
+        .ai-response {
+            background-color: rgba(67, 97, 238, 0.05);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .main-fab {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .main-fab i {
+            transition: transform 0.3s;
+        }
+
+        .main-fab.open i {
+            transform: rotate(45deg);
+        }
+
+        .sub-fab {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            visibility: hidden;
+        }
+
+        .fab-container.open .sub-fab {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .sub-fab.whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+
+        .sub-fab.ai {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .sub-fab.import {
+            background-color: var(--success);
+            color: white;
+        }
+         /* AI Chat */
+        .ai-chat-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            border: 1px solid var(--border-color);
+        }
+
+        .ai-chat-container.open {
+            display: flex;
+        }
+
+        .ai-chat-header {
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border-top-left-radius: var(--radius);
+            border-top-right-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .ai-chat-input {
+            display: flex;
+            padding: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .ai-chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-right: 0.5rem;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .ai-chat-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            width: 40px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            max-width: 80%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            background-color: rgba(67, 97, 238, 0.1);
+            margin-left: auto;
+            border: 1px solid rgba(67, 97, 238, 0.3);
+        }
+
+        .ai-message {
+            background-color: rgba(67, 97, 238, 0.05);
+            margin-right: auto;
+            border: 1px solid rgba(67, 97, 238, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-nav {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .ai-chat-container {
+                width: 90%;
+                right: 5%;
+                bottom: 70px;
+            }
+        }
+   /* Theme toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        /* Add this to your CSS */
+html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+}
+
+.quiz-container {
+    touch-action: pan-y;
+}
+
+.option, .nav-btn, .tab, .mode-card {
+    touch-action: manipulation;
+}
+/* Danger zone styling */
+.danger-zone {
+  background: rgba(247, 37, 133, 0.08);
+  border: 2px dashed var(--danger);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 30px 0;
+  text-align: center;
+}
+
+/* Button animation */
+#resetAllBtn {
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+#resetAllBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(247, 37, 133, 0.5);
+}
+
+#resetAllBtn:active {
+  transform: scale(0.95);
+}
+
+/* Ripple effect */
+#resetAllBtn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+#resetAllBtn:focus:not(:active)::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+/* Course Card Container */
+.course-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Prevents content overflow */
+}
+
+/* Title Styling */
+.course-card h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+  word-break: break-word; /* Breaks long course names */
+}
+
+/* Meta Info */
+.course-meta {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-bottom: 1rem;
+}
+
+/* Action Buttons Container */
+.course-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto; /* Pushes buttons to bottom */
+  flex-wrap: wrap; /* Allows wrapping */
+}
+
+/* Button Styling */
+.course-actions .btn {
+  flex: 1;
+  min-width: 70px;
+  white-space: nowrap;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+/* Button Icons */
+.course-actions .btn i {
+  margin-right: 0.3rem;
+}
+
+/* Hover Effects */
+.course-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 400px) {
+  .course-actions .btn {
+    min-width: 60px;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.4rem;
+  }
+}
+/* Fullscreen styles */
+#quizTabContent:fullscreen {
+  background: var(--bg-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Button icon toggle */
+#quizTabContent:fullscreen #fullscreenBtn i::before {
+  content: "\f066"; /* FontAwesome compress icon */
+}
+
+/* Spacing between buttons */
+.quiz-nav {
+  display: flex;
+  gap: 0.5rem; /* Adds space between buttons */
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+}
+/* Add to your existing CSS */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    white-space: nowrap;
+    align-items: center; /* Vertically center tabs */
+}
+
+.tab {
+    flex: 1; /* Equal width tabs */
+    min-width: 120px; /* Minimum tab width */
+    text-align: center;
+    padding: 0.75rem 0; /* Uniform padding */
+}
+
+/* Swipe detection for tabs */
+.tabs-container {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.tabs-wrapper {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+/* Hide research button in exam mode */
+.research-btn {
+    display: inline-flex;
+}
+
+.exam-mode .research-btn {
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Smart Quizzer</span>
+        </div>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
+                <div class="tab" onclick="showTab('import')">Import</div>
+                <div class="tab" id="quizTab" style="display:none;" onclick="showTab('quiz')">Quiz</div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboardTab">
+                <div class="dashboard-header">
+                    <h2>Welcome to Smart Quizzer</h2>
+                    <p>Prepare for your exams with this offline-capable CBT simulator. Import your questions or start with sample questions.</p>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Quiz Settings</h3>
+                    <div class="mode-selection">
+                        <div class="mode-card active" data-mode="cbt" onclick="setMode('cbt')">
+                            <i class="fas fa-stopwatch"></i>
+                            <h4>Exam Mode</h4>
+                            <p>Timed test with final score</p>
+                        </div>
+                        <div class="mode-card" data-mode="practice" onclick="setMode('practice')">
+                            <i class="fas fa-book-open"></i>
+                            <h4>Practice Mode</h4>
+                            <p>Learn with explanations</p>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider-header">
+                            <label>Number of Questions:</label>
+                            <span class="slider-value" id="questionCountDisplay">10</span>
+                        </div>
+                        <input type="range" min="5" max="100" value="10" id="questionCountSlider" class="slider">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Your Courses</h3>
+                    
+                    <div id="courseButtonsContainer" class="courses-grid"></div>
+                </div>
+            </div>
+            <div class="danger-zone">
+                <button class="btn btn-danger" id="resetAllBtn">
+                    <i class="fas fa-bomb"></i> Nuke All Courses
+                </button>
+            </div>
+
+            <!-- Import Tab -->
+            <div id="importTab" style="display:none;">
+                <h2>Import Questions</h2>
+                <p>Add your questions using one of these methods:</p>
+                
+                <div class="import-options">
+                    <div class="import-option" onclick="showTextImport()">
+                        <i class="fas fa-paste"></i>
+                        <h4>Paste Text</h4>
+                        <p>Copy-paste questions in simple format</p>
+                    </div>
+                    <div class="import-option whatsapp" onclick="openWhatsAppGroup()">
+                        <i class="fab fa-whatsapp"></i>
+                        <h4>WhatsApp Group</h4>
+                        <p>Join our question sharing community</p>
+                    </div>
+                    <div class="import-option" id="fileImportOption">
+                        <i class="fas fa-file-import"></i>
+                        <h4>Text File</h4>
+                        <p>Import from .txt file</p>
+                        <input type="file" id="fileImport" accept=".txt" style="display:none;">
+                    </div>
+                </div>
+
+                <div id="textImportArea" class="text-import-area">
+                    <div class="form-group">
+                        <label>Course Name:</label>
+                        <input type="text" id="courseName" placeholder="e.g. Mathematics 101" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Questions:</label>
+                        <textarea id="mcqText" class="form-control" rows="10" placeholder="Paste questions here in format:
+Q1. What is 2+2?
+*A. 4
+B. 5
+C. 6
+
+Q2. Capital of France?
+A. London
+*B. Paris
+C. Berlin"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="importQuestions()">
+                        <i class="fas fa-file-import"></i> Import Questions
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="quizTabContent" style="display:none;">
+                <div class="quiz-header">
+                    <h2 id="quizTitle"></h2>
+                    <div class="timer-container">
+                        <button class="btn btn-outline" id="fullscreenBtn" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <i class="fas fa-stopwatch"></i>
+                        <div class="timer-text" id="timerDisplay">00:00</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="question-container">
+                    <div class="question-text" id="questionArea"></div>
+                    <div class="options-container" id="optionsArea"></div>
+                </div>
+
+                <div class="ai-helper" id="aiHelper">
+                    <h4><i class="fas fa-robot"></i> Study Helper</h4>
+                    <div class="ai-response" id="aiResponse">
+                        <p>In practice mode, select an answer to see explanation here.</p>
+                    </div>
+                </div>
+
+                <div class="question-nav" id="navPanel"></div>
+
+                <div class="quiz-nav">
+                    <button class="btn btn-outline" onclick="prevQuestion()">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn btn-outline research-btn" onclick="researchQuestion()">
+                        <i class="fas fa-search"></i> Research
+                    </button>
+                    <div>
+                        <button class="btn btn-danger" onclick="clearCurrentCourse()">
+                            <i class="fas fa-trash"></i> Clear Course
+                        </button>
+                        <button class="btn btn-success" onclick="submitQuiz()">
+                            <i class="fas fa-check"></i> Submit
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" onclick="nextQuestion()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Floating Action Buttons -->
+    <div class="fab-container" id="fabContainer">
+        <div class="sub-fab whatsapp" onclick="openWhatsAppContact()">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="sub-fab ai" onclick="toggleChat()">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="sub-fab import" onclick="showTab('import')">
+            <i class="fas fa-plus"></i>
+        </div>
+        <div class="main-fab" id="mainFab" onclick="toggleFab()">
+            <i class="fas fa-plus"></i>
+        </div>
+    </div>
+
+    <!-- AI Chat Box -->
+    <div id="aiChatContainer" class="ai-chat-container">
+        <div class="ai-chat-header">
+            <h3><i class="fas fa-robot"></i> Study Assistant</h3>
+            <button class="close-chat" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="aiChatMessages" class="ai-chat-messages"></div>
+        <div class="ai-chat-input">
+            <input type="text" id="aiChatInput" placeholder="Ask me anything about the quiz...">
+            <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+        // ====== STATE MANAGEMENT ======
+        let db = {};
+        let currentCourse = '';
+        let mode = "cbt";
+        let questions = [];
+        let currentIndex = 0;
+        let answers = {};
+        let quizTimer = null;
+        let timeRemaining = 0;
+        let maxQuestions = 10;
+        let totalTime = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // ====== DOM ELEMENTS ======
+        const themeToggle = document.getElementById('themeToggle');
+        const questionCountSlider = document.getElementById('questionCountSlider');
+        const questionCountDisplay = document.getElementById('questionCountDisplay');
+        const courseNameInput = document.getElementById('courseName');
+        const mcqTextArea = document.getElementById('mcqText');
+        const fileImport = document.getElementById('fileImport');
+        const fileImportOption = document.getElementById('fileImportOption');
+        const quizTitle = document.getElementById('quizTitle');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const questionArea = document.getElementById('questionArea');
+        const optionsArea = document.getElementById('optionsArea');
+        const navPanel = document.getElementById('navPanel');
+        const progressBar = document.getElementById('progressBar');
+        const aiHelper = document.getElementById('aiHelper');
+        const aiResponse = document.getElementById('aiResponse');
+        const mainFab = document.getElementById('mainFab');
+        const fabContainer = document.getElementById('fabContainer');
+        const quizTabContent = document.getElementById('quizTabContent');
+
+        // ====== THEME TOGGLE ======
+        themeToggle.addEventListener('click', () => {
+            document.body.setAttribute('data-theme', 
+                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+            
+            // Update icon
+            const icon = themeToggle.querySelector('i');
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+            
+            localStorage.setItem('theme', document.body.getAttribute('data-theme'));
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            const icon = themeToggle.querySelector('i');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        // ====== TAB NAVIGATION ======
+       function showTab(tabName) {
+    // Add validation for quiz tab
+    if (tabName === 'quiz' && (!currentCourse || questions.length === 0)) {
+        alert("Please select a course and start a quiz first");
+        showTab('dashboard'); // Return to dashboard
+        return;
+    }
+    
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    document.getElementById('dashboardTab').style.display = 'none';
+    document.getElementById('importTab').style.display = 'none';
+    document.getElementById('quizTabContent').style.display = 'none';
+    
+    if (tabName === 'dashboard') {
+        document.querySelector('.tab[onclick="showTab(\'dashboard\')"]').classList.add('active');
+        document.getElementById('dashboardTab').style.display = 'block';
+        closeFab();
+    } else if (tabName === 'import') {
+        document.querySelector('.tab[onclick="showTab(\'import\')"]').classList.add('active');
+        document.getElementById('importTab').style.display = 'block';
+        closeFab();
+    } else if (tabName === 'quiz') {
+        // Only show quiz tab if there are questions
+        if (questions.length > 0) {
+            document.querySelector('.tab[onclick="showTab(\'quiz\')"]').classList.add('active');
+            document.getElementById('quizTabContent').style.display = 'block';
+        }
+    }
+}
+        // ====== SWIPE DETECTION FOR TABS ======
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+    const threshold = 50; // Minimum swipe distance in pixels
+    const activeTab = document.querySelector('.tab.active');
+    const quizTab = document.getElementById('quizTab');
+    
+    if (touchEndX < touchStartX - threshold) {
+        // Swipe left - next tab
+        if (activeTab.nextElementSibling && 
+            !(activeTab.textContent.includes("Import") && quizTab.style.display === "none")) {
+            activeTab.nextElementSibling.click();
+        }
+    } else if (touchEndX > touchStartX + threshold) {
+        // Swipe right - previous tab
+        if (activeTab.previousElementSibling) {
+            activeTab.previousElementSibling.click();
+        }
+    }
+}
+
+        // ====== QUESTION IMPORT ======
+        function showTextImport() {
+            document.getElementById('textImportArea').style.display = 'block';
+        }
+
+        function openWhatsAppGroup() {
+            window.open("https://chat.whatsapp.com/KRGgOQubLsN0HGu7j4Dy7L", "_blank");
+        }
+
+        function openWhatsAppContact() {
+            window.open("https://wa.me/2349066310730", "_blank");
+        }
+
+        fileImportOption.addEventListener('click', () => {
+            fileImport.click();
+        });
+
+        fileImport.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mcqTextArea.value = e.target.result;
+                showTextImport();
+            };
+            reader.readAsText(file);
+        });
+
+        function importQuestions() {
+            const course = courseNameInput.value.trim();
+            const text = mcqTextArea.value.trim();
+            
+            if (!course || !text) {
+                alert("Please enter a course name and questions.");
+                return;
+            }
+            
+            const parsed = parseMCQs(text);
+            if (parsed.length === 0) {
+                alert("No valid questions found. Please check your format.");
+                return;
+            }
+            
+            if (!db[course]) db[course] = [];
+            db[course] = db[course].concat(parsed);
+            saveData();
+            
+            alert(`Imported ${parsed.length} questions to "${course}"`);
+            courseNameInput.value = "";
+            mcqTextArea.value = "";
+            document.getElementById('textImportArea').style.display = 'none';
+            updateCourseButtons();
+        }
+
+        function parseMCQs(text) {
+            // Improved parsing that handles various formats
+            const blocks = text.split(/\n\s*\n/);
+            const result = [];
+            
+            for (const block of blocks) {
+                if (!block.trim()) continue;
+                
+                const lines = block.trim().split("\n").filter(line => line.trim());
+                if (lines.length < 2) continue;
+                
+                // Extract question (remove Q1. prefix if present)
+                const q = lines[0].replace(/^Q\d+\.\s*/i, '').trim();
+                if (!q) continue;
+                
+                const opts = [];
+                let correct = null;
+                
+                for (let i = 1; i < lines.length; i++) {
+                    let line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // Check for correct answer (marked with *)
+                    if (line.startsWith("*")) {
+                        correct = opts.length;
+                        line = line.substring(1).trim();
+                    }
+                    
+                    // Remove option prefix (A., B., etc.)
+                    line = line.replace(/^[A-Z]\.\s*/i, '').trim();
+                    if (line) opts.push(line);
+                }
+                
+                if (q && opts.length >= 2 && correct !== null && correct < opts.length) {
+                    result.push({ q, opts, correct });
+                }
+            }
+            
+            return result;
+        }
+
+        // ====== DATA MANAGEMENT ======
+        function saveData() {
+            localStorage.setItem("cbtData", JSON.stringify(db));
+        }
+
+        function loadData() {
+            const data = localStorage.getItem("cbtData");
+            db = data ? JSON.parse(data) : {};
+            updateCourseButtons();
+        }
+
+        function clearCurrentCourse() {
+            if (!currentCourse) return;
+            
+            if (confirm(`Are you sure you want to delete the "${currentCourse}" course?`)) {
+                delete db[currentCourse];
+                saveData();
+                updateCourseButtons();
+                showTab('dashboard');
+            }
+        }
+
+        // ====== COURSE MANAGEMENT ======
+        function updateCourseButtons() {
+            const container = document.getElementById('courseButtonsContainer');
+            container.innerHTML = '';
+            
+            const courses = Object.keys(db);
+            if (courses.length === 0) {
+                container.innerHTML = '<p>No courses yet. Import some questions to get started.</p>';
+                return;
+            }
+            
+            courses.forEach(course => {
+                const courseDiv = document.createElement('div');
+                courseDiv.className = 'course-card';
+                courseDiv.innerHTML = `
+                    <h3>${course}</h3>
+                    <div class="course-meta">
+                        <span>${db[course].length} questions</span>
+                    </div>
+                    <div class="course-actions">
+                        <button class="btn btn-primary btn-sm" onclick="startQuiz('${course}')">
+                            <i class="fas fa-play"></i> Start
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="exportCourse('${course}')">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="shareViaWhatsApp('${course}')">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                    </div>
+                `;
+                container.appendChild(courseDiv);
+            });
+        }
+
+        // ====== QUIZ FLOW ======
+        questionCountSlider.addEventListener('input', () => {
+            questionCountDisplay.textContent = questionCountSlider.value;
+            maxQuestions = Number(questionCountSlider.value);
+        });
+
+        function setMode(selectedMode) {
+            mode = selectedMode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('active');
+                if (card.dataset.mode === selectedMode) {
+                    card.classList.add('active');
+                }
+            });
+            
+            // Update UI based on mode
+            updateQuizUIForMode();
+        }
+
+        function updateQuizUIForMode() {
+            if (mode === 'cbt') {
+                quizTabContent.classList.add('exam-mode');
+                aiHelper.style.display = 'none';
+            } else {
+                quizTabContent.classList.remove('exam-mode');
+                aiHelper.style.display = 'block';
+            }
+        }
+
+        function startQuiz(course) {
+            currentCourse = course;
+            const allQuestions = db[course] || [];
+            
+            if (allQuestions.length === 0) {
+                alert("No questions available for this course.");
+                return;
+            }
+            
+            // Shuffle and select questions
+            questions = shuffle(allQuestions).slice(0, Math.min(maxQuestions, allQuestions.length));
+            currentIndex = 0;
+            answers = {};
+            
+            quizTitle.textContent = course;
+            document.getElementById('quizTab').style.display = 'block';
+            showTab('quiz');
+            
+            // Set up timer for exam mode
+            if (mode === 'cbt') {
+                totalTime = questions.length * 60; // 1 min per question
+                timeRemaining = totalTime;
+                startTimer();
+            } else {
+                aiHelper.style.display = 'block';
+            }
+            
+            renderQuestion();
+            updateQuizUIForMode();
+        }
+
+        function renderQuestion() {
+            if (questions.length === 0) return;
+            
+            const qObj = questions[currentIndex];
+            questionArea.innerHTML = `${currentIndex + 1}. ${qObj.q}`;
+            
+            let optsHTML = '';
+            qObj.opts.forEach((opt, idx) => {
+                let cls = 'option';
+                if (answers[currentIndex] === idx) cls += ' selected';
+                optsHTML += `<div class="${cls}" onclick="selectOption(${idx})">${opt}</div>`;
+            });
+            
+            optionsArea.innerHTML = optsHTML;
+            renderNav();
+            updateProgress();
+        }
+
+        function selectOption(idx) {
+            answers[currentIndex] = idx;
+            
+            if (mode === 'practice') {
+                const qObj = questions[currentIndex];
+                const correctIdx = qObj.correct;
+                const isCorrect = idx === correctIdx;
+                
+                // Highlight answers
+                document.querySelectorAll('.option').forEach((opt, i) => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                    
+                    if (i === correctIdx) {
+                        opt.classList.add('correct');
+                    } else if (i === idx && !isCorrect) {
+                        opt.classList.add('incorrect');
+                    } else if (i === idx) {
+                        opt.classList.add('selected');
+                    }
+                });
+                
+                // Show explanation in practice mode
+                showExplanation(qObj, idx);
+            } else {
+                renderQuestion();
+            }
+        }
+
+        function showExplanation(qObj, selectedIdx) {
+            const correctIdx = qObj.correct;
+            const isCorrect = selectedIdx === correctIdx;
+            
+            let explanation = `<p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong> `;
+            
+            if (isCorrect) {
+                explanation += `You selected the right answer.</p>`;
+            } else {
+                explanation += `The correct answer is: ${qObj.opts[correctIdx]}</p>`;
+            }
+            
+            // Add simple reasoning based on question content
+            if (qObj.q.toLowerCase().includes('capital')) {
+                explanation += `<p>This question is about geographical capitals. Remember that capitals are usually the seat of government for a country.</p>`;
+            } else if (qObj.q.toLowerCase().includes('math') || qObj.q.match(/\d+/)) {
+                explanation += `<p>This is a mathematical question. Double-check your calculations.</p>`;
+            } else {
+                explanation += `<p>Review this concept in your study materials.</p>`;
+            }
+            
+            aiResponse.innerHTML = explanation;
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            }
+        }
+
+        function renderNav() {
+            navPanel.innerHTML = '';
+            
+            for (let i = 0; i < questions.length; i++) {
+                const btn = document.createElement('div');
+                btn.className = 'nav-btn';
+                if (i === currentIndex) btn.classList.add('current');
+                if (answers[i] !== undefined) btn.classList.add('answered');
+                btn.textContent = i + 1;
+                btn.onclick = () => {
+                    currentIndex = i;
+                    renderQuestion();
+                };
+                navPanel.appendChild(btn);
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+  // ====== TIMER ======
+        function startTimer() {
+            updateTimerDisplay();
+            quizTimer = setInterval(() => {
+                timeRemaining--;
+                
+                if (timeRemaining <= 0) {
+                    stopTimer();
+                    alert("Time's up! Submitting your quiz.");
+                    submitQuiz();
+                } else {
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (quizTimer) {
+                clearInterval(quizTimer);
+                quizTimer = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeRemaining / 60);
+            const secs = timeRemaining % 60;
+            timerDisplay.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            
+            // Change color when time is running low
+            timerDisplay.className = 'timer-text';
+            if (timeRemaining <= totalTime * 0.3) {
+                timerDisplay.classList.add('warning');
+            }
+            if (timeRemaining <= totalTime * 0.1) {
+                timerDisplay.classList.add('danger');
+            }
+        }
+
+        // ====== QUIZ SUBMISSION ======
+        function submitQuiz() {
+            if (Object.keys(answers).length < questions.length) {
+                if (!confirm(`You have ${questions.length - Object.keys(answers).length} unanswered questions. Submit anyway?`)) {
+                    return;
+                }
+            }
+            
+            stopTimer();
+            showResults();
+        }
+
+        function showResults() {
+            let score = 0;
+            const total = questions.length;
+            
+            // Calculate score
+            questions.forEach((q, i) => {
+                if (answers[i] === q.correct) score++;
+            });
+            
+            questionArea.innerHTML = `<h3>Quiz Results: ${currentCourse}</h3>`;
+            
+            let resultsHTML = `<div class="score-summary">
+                <h4>Your Score: ${score}/${total} (${Math.round((score/total)*100)}%)</h4>
+                <div class="progress-container" style="height: 20px; margin: 1rem 0;">
+                    <div class="progress-bar" style="width: ${(score/total)*100}%;"></div>
+                </div>
+            </div>`;
+            
+            questions.forEach((q, i) => {
+                const userAnswer = answers[i];
+                const isCorrect = userAnswer === q.correct;
+                
+                resultsHTML += `<div class="question-result ${isCorrect ? 'correct' : 'incorrect'}">
+                    <h5>Q${i+1}: ${q.q}</h5>
+                    <div class="options-review">`;
+                
+                q.opts.forEach((opt, idx) => {
+                    let cls = '';
+                    if (idx === q.correct) cls = 'correct';
+                    else if (idx === userAnswer && !isCorrect) cls = 'incorrect';
+                    
+                    resultsHTML += `<div class="option ${cls}">${opt}</div>`;
+                });
+                
+                resultsHTML += `</div></div>`;
+            });
+            
+            optionsArea.innerHTML = resultsHTML;
+            navPanel.innerHTML = '';
+            
+            // Show restart button
+            document.querySelector('.quiz-nav').innerHTML = `
+                <button class="btn btn-primary" onclick="startQuiz('${currentCourse}')">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+                <button class="btn btn-outline" onclick="showTab('dashboard')">
+                    <i class="fas fa-home"></i> Back to Dashboard
+                </button>`;
+        }
+
+        // ====== EXPORT & SHARE ======
+        function exportCourse(courseName) {
+            if (!db[courseName]) return;
+            
+            let exportText = `${courseName} Questions:\n\n`;
+            db[courseName].forEach((q, i) => {
+                exportText += `Q${i+1}. ${q.q}\n`;
+                q.opts.forEach((opt, j) => {
+                    exportText += `${j === q.correct ? '*' : ''}${String.fromCharCode(65 + j)}. ${opt}\n`;
+                });
+                exportText += "\n";
+            });
+            
+            // Create download link
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${courseName.replace(/\s+/g, '_')}_questions.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function shareViaWhatsApp(courseName) {
+            if (!db[courseName]) return;
+            
+            let shareText = `Check out these ${courseName} questions:\n\n`;
+            // Only share first 5 questions to avoid message being too long
+            const questionsToShare = db[courseName].slice(0, 5);
+            
+            questionsToShare.forEach((q, i) => {
+                shareText += `Q${i+1}. ${q.q}\n`;
+                q.opts.forEach((opt, j) => {
+                    shareText += `${String.fromCharCode(65 + j)}. ${opt}\n`;
+                });
+                shareText += `Answer: ${String.fromCharCode(65 + q.correct)}\n\n`;
+            });
+            
+            const encodedText = encodeURIComponent(shareText);
+            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+        }
+        
+        // ====== RESEARCH FUNCTION ======
+        function researchQuestion() {
+            if (!questions[currentIndex]) return;
+            
+            const question = questions[currentIndex].q;
+            const geminiUrl = 'https://gemini.google.com/app';
+            
+            // Try to copy to clipboard first
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(question).then(() => {
+                    if (confirm('Question copied to clipboard! Open Gemini to research?')) {
+                        window.open(geminiUrl, '_blank');
+                    }
+                }).catch(() => {
+                    // Fallback if clipboard fails
+                    window.open(`${geminiUrl}?q=${encodeURIComponent(question)}`, '_blank');
+                });
+            } else {
+                // Fallback if clipboard API not available
+                window.open(`${geminiUrl}?q=${encodeURIComponent(question)}`, '_blank');
+            }
+        }
+
+        // ====== FLOATING ACTION BUTTON ======
+        function toggleFab() {
+            fabContainer.classList.toggle('open');
+            mainFab.classList.toggle('open');
+        }
+
+        function closeFab() {
+            fabContainer.classList.remove('open');
+            mainFab.classList.remove('open');
+        }
+
+        // ====== AI CHAT ======
+        let chatOpen = false;
+
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            const chatContainer = document.getElementById('aiChatContainer');
+            if (chatOpen) {
+                chatContainer.classList.add('open');
+                document.getElementById('aiChatInput').focus();
+                // Add welcome message if chat is empty
+                if (document.getElementById('aiChatMessages').children.length === 0) {
+                    addAIMessage("Hello! I'm your study assistant. How can I help you with your quiz preparation?");
+                }
+            } else {
+                chatContainer.classList.remove('open');
+            }
+            closeFab();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('aiChatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                processUserMessage(message);
+            }
+        }
+
+        function addUserMessage(text) {
+            const messagesContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addAIMessage(text) {
+            const messagesContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            messageDiv.innerHTML = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function processUserMessage(message) {
+            const lowerMsg = message.toLowerCase();
+            let response = "";
+            
+            // Simple AI responses
+            if (lowerMsg.includes('hello') || lowerMsg.includes('hi') || lowerMsg.includes('hey')) {
+                response = "Hello! How can I assist you with your studies today?";
+            }
+            else if (lowerMsg.includes('help') || lowerMsg.includes('assist')) {
+                response = "I can help you by:<br>- Explaining quiz questions<br>- Providing study tips<br>- Answering questions about the quiz content<br>- Suggesting resources<br>What would you like to know?";
+            }
+            else if (lowerMsg.includes('study tip') || lowerMsg.includes('how to study')) {
+                response = "Here are some study tips:<br>1. Take regular breaks (try the Pomodoro technique)<br>2. Test yourself with practice questions<br>3. Teach the material to someone else<br>4. Create mind maps or diagrams<br>5. Get enough sleep before exams";
+            }
+            else if (lowerMsg.includes('this question') && questions[currentIndex]) {
+                const currentQ = questions[currentIndex];
+                response = `The current question is: <strong>"${currentQ.q}"</strong><br>`;
+                response += `Options:<br>`;
+                currentQ.opts.forEach((opt, idx) => {
+                    response += `${opt}<br>`;
+                });
+                if (mode === 'practice') {
+                    response += `<br>The correct answer is <strong>${currentQ.opts[currentQ.correct]}</strong>`;
+                } else {
+                    response += `<br>Try to answer and I'll let you know if you're correct!`;
+                }
+            }
+            else if (lowerMsg.includes('progress') || lowerMsg.includes('how am i doing')) {
+                if (questions.length > 0) {
+                    const answered = Object.keys(answers).length;
+                    const total = questions.length;
+                    response = `You've answered ${answered} of ${total} questions (${Math.round((answered/total)*100)}%).`;
+                    if (answered === total) {
+                        response += " Great job! You can submit your quiz now.";
+                    } else {
+                        response += " Keep going!";
+                    }
+                } else {
+                    response = "There's no active quiz right now. Start a quiz to track your progress.";
+                }
+            }
+            else {
+                response = "I'm a simple study assistant. I can help with:<br>- Explaining questions<br>- Study tips<br>- Quiz progress<br>Try asking something like 'How do I answer this question?' or 'Give me study tips'";
+            }
+            
+            setTimeout(() => {
+                addAIMessage(response);
+            }, 500);
+        }
+
+        // Allow pressing Enter to send message
+        document.getElementById('aiChatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
+        });
+
+        // ====== UTILITIES ======
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // ====== INITIALIZATION ======
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            maxQuestions = Number(questionCountSlider.value);
+            questionCountDisplay.textContent = maxQuestions;
+            
+            // Sample data if empty
+            if (Object.keys(db).length === 0) {
+                db = {
+                    "Sample Math Quiz": [
+                        {
+                            q: "What is 2 + 2?",
+                            opts: ["3", "4", "5"],
+                            correct: 1
+                        },
+                        {
+                            q: "What is 3 × 5?",
+                            opts: ["10", "15", "20"],
+                            correct: 1
+                        }
+                    ],
+                    "Sample Geography": [
+                        {
+                            q: "What is the capital of France?",
+                            opts: ["London", "Paris", "Berlin"],
+                            correct: 1
+                        }
+                    ]
+                };
+                saveData();
+                updateCourseButtons();
+            }
+        });
+        // Confirmation dialog with SweetAlert (or native)
+        document.getElementById('resetAllBtn').addEventListener('click', () => {
+            if (confirm("💣 NUKE WARNING!\nThis will delete ALL courses permanently!\n\nAre you absolutely sure?")) {
+                // Clear data
+                db = {};
+                localStorage.removeItem("cbtData");
+                updateCourseButtons();
+                
+                // Cool explosion effect
+                const btn = document.getElementById('resetAllBtn');
+                btn.innerHTML = '<i class="fas fa-explosion"></i> BOOM!';
+                btn.style.backgroundColor = '#ff0000';
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Reset Complete';
+                    btn.style.backgroundColor = 'var(--success)';
+                }, 1000);
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-bomb"></i> Nuke All Courses';
+                    btn.style.backgroundColor = 'var(--danger)';
+                }, 3000);
+            }
+        });
+
+        function toggleFullscreen() {
+            const quizTab = document.getElementById('quizTabContent');
+            
+            if (!document.fullscreenElement) {
+                quizTab.requestFullscreen()
+                    .then(() => {
+                        // Keep header visible in fullscreen
+                        document.querySelector('header').style.display = 'none';
+                        document.querySelector('.tabs').style.display = 'none';
+                        
+                        // Force re-render of navigation
+                        setTimeout(() => {
+                            const nav = document.querySelector('.quiz-nav');
+                            nav.style.display = 'none';
+                            nav.offsetHeight; // Trigger reflow
+                            nav.style.display = 'flex';
+                        }, 100);
+                    })
+                    .catch(err => {
+                        console.log("Fullscreen error:", err);
+                    });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Handle fullscreen changes (like ESC key)
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.getElementById('fullscreenBtn');
+            if (document.fullscreenElement) {
+                btn.innerHTML = '<i class="fas fa-compress"></i> Exit';
+            } else {
+                btn.innerHTML = '<i class="fas fa-expand"></i> Fullscreen';
+                document.querySelector('header').style.display = 'flex';
+                document.querySelector('.tabs').style.display = 'flex';
+            }
+        });
+    </script>
+</body>
+</html>

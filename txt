@@ -1,0 +1,893 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Smart Quizzer CBT Simulator with AI Helper</title>
+<style>
+  /* Basic reset */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    margin:0; background:#f2f2f2; overflow-x: hidden;
+  }
+  header {
+    background:#004080;
+    color:#fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  header h1 {
+    margin:0;
+    font-size: 1.4rem;
+  }
+  nav {
+    position: relative;
+  }
+  .nav-btn {
+    background: #0066cc;
+    border:none;
+    color:#fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .dropdown {
+    position: absolute;
+    right: 0; top: 110%;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    display: none;
+    min-width: 120px;
+    z-index: 2000;
+  }
+  .dropdown button {
+    width: 100%;
+    padding: 10px;
+    background: none;
+    border:none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .dropdown button:hover {
+    background: #004080;
+    color: white;
+  }
+  .show-dropdown {
+    display: block;
+  }
+  main {
+    max-width: 800px;
+    margin: 20px auto 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  #importSection input[type=text],
+  #importSection textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    font-family: monospace;
+    resize: vertical;
+  }
+  button {
+    padding: 10px 18px;
+    margin: 5px 6px 5px 0;
+    border:none;
+    border-radius: 5px;
+    cursor: pointer;
+    background:#004080;
+    color:#fff;
+    font-weight: bold;
+    font-size: 1rem;
+    user-select: none;
+  }
+  button:hover {
+    background:#003060;
+  }
+  .option {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+  .option.selected {
+    background: #cce5ff;
+    border-color: #004080;
+  }
+  .option.correct {
+    background: #28a745;
+    color: white;
+    border-color: #1e7e34;
+  }
+  .option.incorrect {
+    background: #dc3545;
+    color: white;
+    border-color: #a71d2a;
+  }
+  #navPanel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 15px;
+  }
+  .navBtn {
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .navBtn.answered {
+    background: #28a745;
+    color: white;
+  }
+  .navBtn.current {
+    background: #007bff;
+    color: white;
+  }
+  #quizSection > button {
+    margin-top: 10px;
+  }
+  /* Slider container */
+  #sliderContainer {
+    margin-bottom: 20px;
+  }
+  #sliderContainer label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  #questionCountSlider {
+    width: 100%;
+  }
+  #questionCountDisplay {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 4px;
+  }
+  /* Timer */
+  #timer {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #004080;
+    margin: 10px 0 10px 0;
+  }
+  /* AI drawer styles */
+  #aiDrawer {
+    position: fixed;
+    top: 0; right: -400px;
+    width: 400px;
+    height: 100%;
+    background: #f9f9f9;
+    box-shadow: -4px 0 8px rgba(0,0,0,0.1);
+    border-left: 1px solid #ccc;
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 3000;
+  }
+  #aiDrawer.open {
+    right: 0;
+  }
+  #aiDrawerHeader {
+    background: #004080;
+    color: white;
+    padding: 15px 20px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #aiDrawerCloseBtn {
+    background: transparent;
+    border:none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+  
+  #aiChatContainer {
+    flex: 1;
+    padding: 15px 20px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+  .chatMessage {
+    margin-bottom: 12px;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 90%;
+    word-break: break-word;
+  }
+  .chatUser {
+    background: #cce5ff;
+    align-self: flex-end;
+  }
+  .chatAI {
+    background: #e9ecef;
+    align-self: flex-start;
+  }
+  #aiInputArea {
+    border-top: 1px solid #ccc;
+    padding: 12px 20px;
+    display: flex;
+    gap: 10px;
+  }
+  #aiInputArea textarea {
+    flex: 1;
+    resize: none;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-family: monospace;
+    font-size: 1rem;
+    padding: 8px;
+    min-height: 60px;
+    max-height: 120px;
+  }
+  #aiSendBtn {
+    background: #004080;
+    border:none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #aiSendBtn:disabled {
+    background: #7a9ecf;
+    cursor: not-allowed;
+  }
+  /* Mobile Menu Styles */
+#menuToggle {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: white;
+  padding: 0 15px;
+}
+
+#mobileMenu {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 50px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  min-width: 180px;
+  z-index: 1000;
+}
+
+#mobileMenu button {
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 1rem;
+}
+
+#mobileMenu button:hover {
+  background: #f0f0f0;
+}
+
+.show-mobile-menu {
+  display: block !important;
+}
+</style>
+<!-- Add this in <head> -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<style>
+  /* Paste ALL the CSS from the previous answer here */
+  :root {
+    --primary: #4361ee;
+    --dark: #0f172a;
+    /* ... all other CSS variables ... */
+  }
+  
+  body {
+    /* ... dark theme styles ... */
+  }
+  * {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+  /* Include ALL other CSS rules from the answer */
+</style>
+</head>
+<body>
+<header>
+    <button id="themeToggle" style="background:transparent;border:none;font-size:1.5rem;">
+  🌓
+</button>
+  <h1 style="font-weight: 600;">Smart Quizzer CBT Simulator</h1>
+  <nav>
+    <button id="menuToggle" aria-label="Menu">
+      <svg width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+      </svg>
+    </button>
+    <div id="mobileMenu" class="dropdown">
+      <button onclick="showImportSection()">📊 Dashboard</button>
+      <button onclick="showImportSection()">📥 Import</button>
+      <button onclick="clearCourses()">🗑️ Clear Data</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div id="quizGlassContainer" style="background: rgba(255,255,255,0.05); backdrop-filter: blur(16px); border-radius: 16px; padding: 20px;">
+<section id="importSection">
+    
+  <h2>Import Questions</h2>
+  <button onclick="toggleImportMenu()" style="background:#007bff;color:white;padding:8px 12px;border:none;border-radius:5px;cursor:pointer;">
+    Import Questions ▼
+  </button>
+
+  <div id="importMenu" style="display:none;position:absolute;background:white;border:1px solid #ccc;padding:10px;border-radius:5px;box-shadow:0 2px 6px rgba(0,0,0,0.15);min-width:200px;">
+    <button style="display:block;width:100%;margin-bottom:5px;background:#f1f1f1;color:#000;border:none;padding:8px;border-radius:5px;cursor:pointer;text-align:left;" onclick="showTextImport()">📋 Paste MCQs</button>
+    <button style="display:block;width:100%;margin-bottom:5px;background:#f1f1f1;color:#000;border:none;padding:8px;border-radius:5px;cursor:pointer;text-align:left;" onclick="openWhatsAppGroup()">💬 Import from WhatsApp</button>
+
+    <button style="display:block;width:100%;background:#f1f1f1;color:#000;border:none;padding:8px;border-radius:5px;cursor:pointer;position:relative;text-align:left;">
+      📂 Import from TXT File
+      <input type="file" accept=".txt" onchange="importFromTxtFile(event)" style="position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+    </button>
+  </div>
+
+  <div id="textImportArea" style="display:none;margin-top:10px;">
+    <textarea id="mcqText" placeholder="Paste questions here" style="width:100%;height:150px;"></textarea>
+    <button onclick="importQuestions()">Import</button>
+  </div>
+</section>
+    <input type="text" id="courseName" placeholder="Course name" />
+    <textarea id="mcqText" placeholder="Paste MCQs here. Use * before correct option. Separate questions with a blank line."></textarea>
+
+    <div id="sliderContainer">
+      <label for="questionCountSlider">Select number of questions to attempt: <span id="questionCountDisplay">10</span></label>
+      <input type="range" min="5" max="50" value="10" id="questionCountSlider" />
+    </div>
+
+    <button onclick="importQuestions()">Import</button>
+    <button onclick="clearCourses()" style="background:#dc3545;">Clear All Courses</button>
+
+    <div id="courseButtonsContainer" style="margin-top:20px;"></div>
+  </section>
+  <div style="margin-top:10px;">
+  <label><input type="radio" name="mode" value="cbt" checked> CBT Mode</label>
+  <label style="margin-left:10px;"><input type="radio" name="mode" value="practice"> Practice Mode</label>
+</div>
+
+  <section id="quizSection" style="display:none;">
+    <h2 id="quizTitle"></h2>
+    <button onclick="clearCourse(currentCourse)" style="background:#dc3545; color:#fff;">Clear This Course</button>
+    <div id="timer">Time Remaining: <span id="timerDisplay">00:00</span></div>
+    <div id="questionArea"></div>
+    <div id="optionsArea"></div>
+    <div id="navPanel"></div>
+    <button onclick="prevQuestion()">Previous</button>
+    <button onclick="nextQuestion()">Next</button>
+    <button onclick="submitQuiz()" style="background:#28a745;">Submit</button>
+    <button onclick="restartQuiz()" style="background:#6c757d;">Restart</button>
+    
+
+  </section>
+    <div id="progressBar" style="height:6px; background:rgba(255,255,255,0.1); margin-top:20px;">
+    <div id="progressFill" style="height:100%; width:0%; background:#4361ee; border-radius:3px;"></div>
+  </div>
+</div>
+</main>
+
+
+<script>
+  // ====== GLOBALS ======
+  let db = {};
+  let currentCourse = '';
+  let mode = "cbt"; // default mode
+  let questions = [];
+  let currentIndex = 0;
+  let answers = {};
+  let quizTimer = null;
+  let timeRemaining = 0; // seconds
+  let maxQuestions = 10;
+
+  // Hugging Face API
+  const HF_API_KEY = "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"; // <-- Replace with your API key
+  const HF_MODEL = "HuggingFaceH4/zephyr-7b-beta"; // Example free model (can change)
+
+  // ====== NAVIGATION MENU ======
+  const navAiBtn = document.getElementById("navAiBtn");
+  const aiDropdown = document.getElementById("aiDropdown");
+  const openAiDrawerBtn = document.getElementById("openAiDrawerBtn");
+  const aiDrawer = document.getElementById("aiDrawer");
+  const aiDrawerCloseBtn = document.getElementById("aiDrawerCloseBtn");
+  const navHomeBtn = document.getElementById("navHomeBtn");
+  const navImportBtn = document.getElementById("navImportBtn");
+
+ 
+
+  
+   
+  
+
+  // ====== IMPORT QUESTIONS ======
+  function importQuestions(){
+    const course = document.getElementById("courseName").value.trim();
+    const text = document.getElementById("mcqText").value.trim();
+    if(!course || !text){
+      alert("Please enter a course name and questions.");
+      return;
+    }
+    const parsed = parseMCQs(text);
+    if(!db[course]) db[course] = [];
+    db[course] = db[course].concat(parsed);
+    localStorage.setItem("cbtData", JSON.stringify(db));
+    alert(`Imported ${parsed.length} questions to course "${course}"`);
+    updateCourseButtons();
+    document.getElementById("courseName").value = "";
+    document.getElementById("mcqText").value = "";
+  }
+
+  function parseMCQs(text){
+    let blocks = text.split(/\n\s*\n/);
+    let result = [];
+    for(let block of blocks){
+      let lines = block.trim().split("\n");
+      if(lines.length < 2) continue;
+      let q = lines[0].trim();
+      let opts = [];
+      let correct = null;
+      for(let i=1; i<lines.length; i++){
+        let line = lines[i].trim();
+        if(line.startsWith("*")){
+          correct = i-1;
+          line = line.substring(1).trim();
+        }
+        opts.push(line);
+      }
+      if(q && opts.length && correct !== null){
+        result.push({q, opts, correct});
+      }
+    }
+    return result;
+  }
+
+  // ====== CLEAR COURSES ======
+  function clearCourses(){
+    if(confirm("Are you sure you want to clear ALL courses and questions? This cannot be undone.")){
+      db = {};
+      localStorage.removeItem("cbtData");
+      updateCourseButtons();
+      alert("All courses cleared.");
+      showImportSection();
+    }
+  }
+
+  // ====== LOAD DATA ======
+  function loadData(){
+    let data = localStorage.getItem("cbtData");
+    if(data){
+      db = JSON.parse(data);
+    } else {
+      db = {};
+    }
+    updateCourseButtons();
+  }
+
+  // ====== UPDATE COURSE BUTTONS ======
+  function updateCourseButtons(){
+    const container = document.getElementById("courseButtonsContainer");
+    container.innerHTML = "";
+
+    const courses = Object.keys(db);
+    if(courses.length === 0){
+      container.innerHTML = "<p><em>No courses available. Import some questions above.</em></p>";
+      return;
+    }
+
+    courses.forEach(course => {
+      const btn = document.createElement("button");
+      btn.textContent = `Start "${course}" Quiz`;
+      btn.onclick = () => startQuiz(course);
+      container.appendChild(btn);
+    });
+  }
+
+  // ====== QUIZ FLOW ======
+  const slider = document.getElementById("questionCountSlider");
+  const display = document.getElementById("questionCountDisplay");
+
+  slider.addEventListener("input", () => {
+    display.textContent = slider.value;
+    maxQuestions = Number(slider.value);
+  });
+
+  function startQuiz(course){
+    currentCourse = course;
+    mode = document.querySelector('input[name="mode"]:checked').value;
+    let allQuestions = db[course] || [];
+    if(allQuestions.length === 0){
+      alert("No questions available for this course.");
+      return;
+    }
+    questions = shuffle(allQuestions).slice(0, maxQuestions);
+    currentIndex = 0;
+    answers = {};
+    document.getElementById("quizTitle").innerText = course;
+    showQuizSection();
+    
+    if(mode === "cbt"){
+        timeRemaining = questions.length * 60; // 1 minute per question
+        startTimer();
+        document.getElementById("timer").style.display = "block";
+    } else {
+        document.getElementById("timer").style.display = "none";
+    }
+
+    renderQuestion();
+}
+
+  function showImportSection(){
+    document.getElementById("importSection").style.display = "block";
+    document.getElementById("quizSection").style.display = "none";
+    stopTimer();
+  }
+
+  function showQuizSection(){
+    document.getElementById("importSection").style.display = "none";
+    document.getElementById("quizSection").style.display = "block";
+  }
+
+ function renderQuestion(){
+    const qObj = questions[currentIndex];
+    const questionArea = document.getElementById("questionArea");
+    const optionsArea = document.getElementById("optionsArea");
+
+    // Only show AI Help button in practice mode
+    const aiHelpBtn = mode === "practice" 
+        ? `<button style="font-size:0.8rem; margin-left:10px;" onclick="addToAIPrompt(${currentIndex})">AI Help</button>`
+        : "";
+    
+    questionArea.innerHTML = `<h3>${currentIndex + 1}. ${qObj.q} ${aiHelpBtn}</h3>`;
+
+    let optsHTML = '';
+    qObj.opts.forEach((opt, idx) => {
+      let cls = "option";
+      if(answers[currentIndex] === idx) cls += " selected";
+      optsHTML += `<div class="${cls}" onclick="selectOption(${idx})">${opt}</div>`;
+    });
+    optionsArea.innerHTML = optsHTML;
+
+    renderNav();
+}
+
+  function selectOption(idx) {
+  answers[currentIndex] = idx;
+
+  if (mode === "practice") {
+    let qObj = questions[currentIndex];
+    let correctIdx = qObj.correct;
+
+    // Highlight correct & wrong answers
+    document.querySelectorAll('.option').forEach((optDiv, i) => {
+      optDiv.classList.remove("selected");
+      if (i === correctIdx) {
+        optDiv.style.backgroundColor = "#c8e6c9"; // green for correct
+      }
+      if (i === idx && i !== correctIdx) {
+        optDiv.style.backgroundColor = "#ffcdd2"; // red for wrong
+      }
+    });
+  } else {
+    renderQuestion();
+  }
+}
+function clearCourse(courseName) {
+    if(!courseName) {
+        alert("No course selected to clear.");
+        return;
+    }
+    if(confirm(`Are you sure you want to clear all questions for "${courseName}"?`)) {
+        let db = JSON.parse(localStorage.getItem("cbtDB")) || {};
+        delete db[courseName];
+        localStorage.setItem("cbtDB", JSON.stringify(db));
+        alert(`Course "${courseName}" has been cleared.`);
+        location.reload(); // Reload to update UI
+    }
+}
+
+  function prevQuestion(){
+    if(currentIndex > 0){
+      currentIndex--;
+      renderQuestion();
+    }
+  }
+  function nextQuestion(){
+    if(currentIndex < questions.length - 1){
+      currentIndex++;
+      renderQuestion();
+    }
+  }
+
+  function renderNav(){
+    const navPanel = document.getElementById("navPanel");
+    navPanel.innerHTML = "";
+    for(let i=0; i<questions.length; i++){
+      const btn = document.createElement("div");
+      btn.className = "navBtn";
+      if(i === currentIndex) btn.classList.add("current");
+      if(answers[i] != null) btn.classList.add("answered");
+      btn.textContent = i + 1;
+      btn.onclick = () => {
+        currentIndex = i;
+        renderQuestion();
+      };
+      navPanel.appendChild(btn);
+    }
+  }
+
+  // ====== QUIZ SUBMISSION ======
+  function submitQuiz(){
+    if(Object.keys(answers).length < questions.length){
+      if(!confirm("You have unanswered questions. Submit anyway?")) return;
+    }
+    stopTimer();
+    showResults();
+  }
+
+  function restartQuiz(){
+    document.getElementById("timer").style.display = "block"; // Ensure timer shows again
+    startQuiz(currentCourse);
+}
+
+ // ====== TIMER ======
+function startTimer(){
+  updateTimerDisplay();
+  quizTimer = setInterval(() => {
+    timeRemaining--;
+    if(timeRemaining <= 0){
+      stopTimer();
+      alert("Time's up! Submitting quiz automatically.");
+      submitQuiz();
+    } else {
+      updateTimerDisplay();
+    }
+  }, 1000);
+}
+
+function stopTimer(){
+  if(quizTimer){
+    clearInterval(quizTimer);
+    quizTimer = null;
+  }
+}
+
+function updateTimerDisplay(){
+  let mins = Math.floor(timeRemaining / 60);
+  let secs = timeRemaining % 60;
+  document.getElementById("timerDisplay").textContent = 
+    `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+}
+
+// ====== SHOW RESULTS ======
+function showResults(){
+  const questionArea = document.getElementById("questionArea");
+  const optionsArea = document.getElementById("optionsArea");
+  const navPanel = document.getElementById("navPanel");
+  
+  let score = 0;
+  let total = questions.length;
+
+  questionArea.innerHTML = `<h3>Results for "${currentCourse}"</h3>`;
+
+  let resultHTML = "";
+  questions.forEach((q, i) => {
+    const userAnswer = answers[i];
+    const correct = q.correct;
+    if(userAnswer === correct) score++;
+
+    resultHTML += `<div style="margin-bottom:15px;">
+      <strong>Q${i+1}:</strong> ${q.q}<br/>`;
+    q.opts.forEach((opt, idx) => {
+      let cls = "";
+      if(idx === correct) cls = "correct";
+      else if(idx === userAnswer && userAnswer !== correct) cls = "incorrect";
+      resultHTML += `<div class="option ${cls}">${opt}</div>`;
+    });
+    resultHTML += `</div>`;
+  });
+
+  optionsArea.innerHTML = `<h4>Score: ${score} / ${total}</h4>` + resultHTML;
+  navPanel.innerHTML = "";
+  document.getElementById("timer").textContent = "Quiz finished.";
+
+}
+
+
+// ====== UTILITIES ======
+function shuffle(array){
+  let currentIndex = array.length, randomIndex;
+
+  while(currentIndex !== 0){
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+
+// ====== INIT ======
+window.onload = () => {
+  loadData();
+  maxQuestions = Number(slider.value);
+  display.textContent = maxQuestions;
+};
+function toggleImportMenu(){
+  const menu = document.getElementById("importMenu");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+function showTextImport(){
+  document.getElementById("textImportArea").style.display = "block";
+  document.getElementById("importMenu").style.display = "none";
+}
+
+function openWhatsAppGroup(){
+  window.open("https://chat.whatsapp.com/KRGgOQubLsN0HGu7j4Dy7L?mode=ac_t", "_blank");
+}
+
+function importFromTxtFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById("mcqText").value = e.target.result;
+    document.getElementById("textImportArea").style.display = "block";
+    document.getElementById("importMenu").style.display = "none";
+  };
+  reader.readAsText(file);
+}
+function addToAIPrompt(qIndex) {
+    const q = questions[qIndex];
+    if (!q) return;
+
+    // Build prompt text
+    let promptText = `${q.q}\nOptions:\n`;
+    q.opts.forEach((opt, i) => {
+        promptText += `${String.fromCharCode(65 + i)}. ${opt}\n`;
+    });
+    promptText += "\nExplain the correct answer briefly.";
+
+    // Encode for WhatsApp link
+    const encodedPrompt = encodeURIComponent(promptText);
+
+    // WhatsApp Meta AI deep link (your provided number)
+    const metaAiUrl = `https://wa.me/13135550002?text=${encodedPrompt}`;
+
+    // Open Meta AI in WhatsApp
+    window.open(metaAiUrl, "_blank");
+}
+// Mobile Menu Toggle
+const menuToggle = document.getElementById('menuToggle');
+const mobileMenu = document.getElementById('mobileMenu');
+
+menuToggle.addEventListener('click', function(e) {
+  e.stopPropagation(); // Prevent the click from closing the menu immediately
+  mobileMenu.classList.toggle('show-mobile-menu');
+});
+
+// Close menu when clicking anywhere else
+document.addEventListener('click', function() {
+  mobileMenu.classList.remove('show-mobile-menu');
+});
+
+// Prevent menu from closing when clicking inside it
+mobileMenu.addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+// Modern UI Enhancements
+document.addEventListener('DOMContentLoaded', () => {
+  // Ripple effect for buttons
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+      this.appendChild(ripple);
+      
+      const x = e.clientX - e.target.getBoundingClientRect().left;
+      const y = e.clientY - e.target.getBoundingClientRect().top;
+      
+      ripple.style.left = `${x}px`;
+      ripple.style.top = `${y}px`;
+      
+      setTimeout(() => ripple.remove(), 500);
+    });
+  });
+
+  // Update progress bar
+  function updateProgress() {
+    if(!questions.length) return;
+    const progress = ((currentIndex + 1) / questions.length) * 100;
+    document.getElementById('progressFill').style.width = `${progress}%`;
+  }
+
+  // Call this in your navigation functions
+  window.updateProgress = updateProgress;
+});
+document.getElementById('themeToggle').addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+});
+</script>
+<!-- Floating WhatsApp Button -->
+<a href="https://wa.me/2349066310730" target="_blank" class="whatsapp-float">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    <span>09066310730</span>
+</a>
+
+<style>
+    .whatsapp-float {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background: #25D366;
+        color: white;
+        padding: 10px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-size: 14px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        width: 45px;
+        z-index: 1000;
+    }
+
+    .whatsapp-float img {
+        width: 25px;
+        height: 25px;
+        flex-shrink: 0;
+    }
+
+    .whatsapp-float span {
+        white-space: nowrap;
+        opacity: 0;
+        margin-left: 8px;
+        transition: opacity 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+        width: 170px;
+    }
+
+    .whatsapp-float:hover span {
+        opacity: 1;
+    }
+</style>
+</body>
+</html>
+
