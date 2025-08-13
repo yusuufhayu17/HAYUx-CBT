@@ -20,7 +20,7 @@ body {
     padding-top: 80px;
 }
 
-/* Enhanced Navbar with Glass Morphism */
+/* Enhanced Navbar with Glass Morphism - Search Bar Restored */
 .navbar {
     background: rgba(6, 145, 214, 0.85);
     backdrop-filter: blur(10px);
@@ -93,8 +93,14 @@ body {
     background-color: rgba(255, 255, 255, 0.15);
 }
 
-.nav-links input {
-    padding: 0.5rem 1rem;
+/* Search Bar Styles - Restored and Enhanced */
+.search-container {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.search-container input[type="search"] {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     outline: none;
@@ -102,15 +108,25 @@ body {
     background: rgba(255, 255, 255, 0.15);
     color: white;
     transition: var(--transition);
+    font-size: 0.9rem;
 }
 
-.nav-links input::placeholder {
+.search-container input[type="search"]::placeholder {
     color: rgba(255, 255, 255, 0.7);
 }
 
-.nav-links input:focus {
+.search-container input[type="search"]:focus {
     background: rgba(255, 255, 255, 0.25);
     width: 220px;
+}
+
+.search-container::before {
+    content: '🔍';
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.7;
 }
 
 /* Modern Course Cards with Hover Effects */
@@ -317,10 +333,6 @@ footer p {
     transform: rotate(90deg);
 }
 
-.nav-links {
-    display: flex;
-}
-
 @media (max-width: 768px) {
     .menu-toggle {
         display: block;
@@ -351,9 +363,13 @@ footer p {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .nav-links input {
+    .search-container {
         width: 100%;
-        margin: 1rem 0;
+        margin: 1rem 0 0 0;
+    }
+
+    .search-container input[type="search"] {
+        width: 100%;
     }
 
     .course-list {
