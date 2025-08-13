@@ -421,3 +421,86 @@ footer p {
 .contact-form button:hover {
     animation: pulse 1.5s infinite;
 }
+
+/* Mobile Menu Button Styles - Fixed */
+.menu-toggle {
+    display: none; /* Hidden by default on desktop */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    padding: 0.5rem;
+    order: 1; /* Ensures proper ordering in flex container */
+}
+
+.menu-toggle:hover {
+    transform: rotate(90deg);
+}
+
+/* Mobile Styles - Now Properly Showing Menu Button */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Now visible on mobile */
+    }
+
+    .nav-links {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: rgba(2, 136, 209, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 2rem;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-150%);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 999;
+        gap: 0;
+    }
+
+    .nav-links.show {
+        display: flex; /* Show when toggled */
+        transform: translateY(0);
+    }
+
+    .nav-links a {
+        width: 100%;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .search-container {
+        width: 100%;
+        margin: 1rem 0 0 0;
+    }
+
+    .search-container input[type="search"] {
+        width: 100%;
+    }
+}
+
+/* Navbar Layout Adjustments for Mobile */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.8rem 1.5rem;
+        flex-wrap: nowrap; /* Prevent wrapping before toggle */
+    }
+
+    .logo {
+        order: 0; /* Logo comes first */
+        margin-right: auto;
+    }
+
+    .menu-toggle {
+        order: 2; /* Toggle button comes last */
+    }
+
+    .nav-links {
+        order: 3; /* Menu comes after all navbar items */
+    }
+}
