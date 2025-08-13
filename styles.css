@@ -364,3 +364,411 @@ nav input {
 body {
   padding-top: 90px; /* adjust if navbar height changes */
 }
+
+:root {
+  --primary: #0288d1;
+  --primary-light: #6ec6ff;
+  --primary-dark: #01579b;
+  --text-light: #f9fcff;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f8ff;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+    padding-top: 80px;
+}
+
+/* Enhanced Navbar with Glass Morphism */
+.navbar {
+    background: rgba(6, 145, 214, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+.navbar.scrolled {
+    background: rgba(2, 136, 209, 0.95);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-right: auto;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.navbar .logo:hover {
+    transform: scale(1.03);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-links input {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    outline: none;
+    width: 200px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    transition: var(--transition);
+}
+
+.nav-links input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-links input:focus {
+    background: rgba(255, 255, 255, 0.25);
+    width: 220px;
+}
+
+/* Modern Course Cards with Hover Effects */
+.course-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    flex: 1;
+}
+
+.course-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.course-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-light), var(--primary));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-md);
+}
+
+.course-card:hover::before {
+    transform: scaleX(1);
+}
+
+.course-card h3 {
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.course-card p {
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.course-card a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 0.6rem 1.5rem;
+    background: linear-gradient(to right, var(--primary-light), var(--primary));
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: var(--transition);
+    box-shadow: 0 2px 10px rgba(2, 136, 209, 0.3);
+}
+
+.course-card a:hover {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    box-shadow: 0 4px 15px rgba(2, 136, 209, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Enhanced Contact Section */
+.contact-section {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 2.5rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.contact-section:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.contact-section h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-dark);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.contact-section h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-light), var(--primary));
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form label {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 0.8rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 1rem;
+    background-color: white;
+    transition: var(--transition);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(110, 198, 255, 0.3);
+}
+
+.contact-form textarea {
+    min-height: 120px;
+}
+
+.contact-form button {
+    margin-top: 1.5rem;
+    padding: 0.8rem;
+    border: none;
+    background: linear-gradient(to right, var(--primary-light), var(--primary));
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 10px rgba(2, 136, 209, 0.3);
+}
+
+.contact-form button:hover {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    box-shadow: 0 4px 15px rgba(2, 136, 209, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Footer with Wave Effect */
+footer {
+    position: relative;
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 2.5rem 0 1.5rem;
+    margin-top: auto;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1200 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' fill='%230288d1' opacity='.25'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' fill='%230288d1' opacity='.5'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%230288d1'/%3E%3C/svg%3E");
+    background-size: cover;
+}
+
+footer p {
+    margin: 0.5rem 0;
+}
+
+/* Mobile Menu Animation */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-toggle:hover {
+    transform: rotate(90deg);
+}
+
+.nav-links {
+    display: flex;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: rgba(2, 136, 209, 0.98);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem 2rem;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-150%);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 999;
+    }
+
+    .nav-links.show {
+        transform: translateY(0);
+    }
+
+    .nav-links a {
+        width: 100%;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-links input {
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    .course-list {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+    }
+
+    .contact-section {
+        padding: 1.5rem;
+        margin: 20px auto;
+    }
+}
+
+/* Loading Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.course-card {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* Delay animations for staggered effect */
+.course-card:nth-child(1) { animation-delay: 0.1s; }
+.course-card:nth-child(2) { animation-delay: 0.2s; }
+.course-card:nth-child(3) { animation-delay: 0.3s; }
+.course-card:nth-child(4) { animation-delay: 0.4s; }
+.course-card:nth-child(5) { animation-delay: 0.5s; }
+.course-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Floating animation for visual interest */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.logo:hover {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Button pulse effect */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(2, 136, 209, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(2, 136, 209, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(2, 136, 209, 0); }
+}
+
+.contact-form button:hover {
+    animation: pulse 1.5s infinite;
+}
