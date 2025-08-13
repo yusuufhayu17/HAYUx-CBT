@@ -70,7 +70,7 @@ body {
   box-shadow: 0 0 8px rgba(51, 153, 255, 0.5);
 }
 
-/* ===== Mobile Menu ===== */
+/* ===== Mobile Menu Toggle ===== */
 .menu-toggle {
   display: none;
   background: none;
@@ -80,8 +80,20 @@ body {
   cursor: pointer;
 }
 
+/* ===== Mobile View Adjustments ===== */
 @media (max-width: 600px) {
-  .menu-toggle { display: block; }
+  .navbar {
+    padding: 0.8rem 1rem; /* reduced padding for space */
+  }
+
+  .navbar .logo {
+    flex: 1; /* pushes toggle to the right */
+  }
+
+  .menu-toggle {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
 
   .nav-links {
     flex-direction: column;
