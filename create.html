@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="create.css">
 </head>
+
 <body>
-<nav class="navbar">
-  <div class="logo">HAYUx CBT</div>
-  <button class="menu-toggle" aria-label="Menu">&#9776;</button>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="create.html">Create Quiz</a>
-    <a href="download.html">Download PDFs</a>
-    <a href="contact.html">Contact</a>
-    <input type="text" id="search-bar" placeholder="Search courses...">
-  </div>
-</nav>
+    <nav>
+        <div class="logo">HAYUx CBT</div>
+
+        <!-- Search Bar -->
+        <input type="text" id="search-bar" placeholder="Search courses...">
+
+        <!-- Hamburger Menu Button -->
+        <button class="menu-toggle" aria-label="Menu">&#9776;</button>
+
+        <!-- Nav Links -->
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="create.html">Create Quiz</a>
+            <a href="download.html">Download PDFs</a>
+            <a href="contact.html">Contact</a>
+        </div>
+    </nav>
+
 
     <div class="container">
         <div class="card">
@@ -75,7 +84,7 @@
             <div id="importTab" style="display:none;">
                 <h2>Import Questions</h2>
                 <p>Add your questions using one of these methods:</p>
-                
+
                 <div class="import-options">
                     <div class="import-option" onclick="showTextImport()">
                         <i class="fas fa-paste"></i>
@@ -157,7 +166,8 @@ C. Berlin"></textarea>
             </div>
         </div>
     </div>
-<script src="create.js"></script>
-  
+    <script src="create.js"></script>
+
 </body>
+
 </html>
