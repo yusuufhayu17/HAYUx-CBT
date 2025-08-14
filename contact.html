@@ -1,51 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us</title>
-  <link rel="stylesheet" href="contact.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | HAYUx CBT</title>
+ <link rel="stylesheet" href="contact.css">
 </head>
 <body>
+  <!-- Marquee Banner -->
+  <div class="marquee-container">
+    <marquee behavior="scroll" direction="left">Welcome to HAYUx CBT Practice — PC Access Recommended for Best Results | Two New Courses Coming in 24 Hours</marquee>
+  </div>
 
-    <nav>
-        <div class="logo">HAYUx CBT</div>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">HAYUx CBT</div>
+    <input type="text" id="search-bar" placeholder="Search courses...">
+    <button class="menu-toggle" aria-label="Menu">&#9776;</button>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="create.html">Create Quiz</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe952o-qahcPcVhStlQPgxSetmyPjYA3_W725NUTfRVNDPuXw/viewform?usp=header" target="_blank">Download PDFs</a>
+      <a href="contact.html" class="active">Contact</a>
+    </div>
+  </nav>
 
-        <!-- Search Bar -->
-        <input type="text" id="search-bar" placeholder="Search courses...">
-
-        <!-- Hamburger Menu Button -->
-        <button class="menu-toggle" aria-label="Menu">&#9776;</button>
-
-        <!-- Nav Links -->
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="create.html">Create Quiz</a>
-            <a href="download.html">Download PDFs</a>
-            <a href="contact.html">Contact</a>
+  <!-- Main Content -->
+  <main class="contact-container">
+    <div class="contact-card">
+      <h1>Contact Us</h1>
+      <p>Have questions or feedback? We'd love to hear from you! Our team typically responds within 24 hours.</p>
+      
+      <form id="contact-form" action="https://formspree.io/f/mblkwazy" method="POST" class="contact-form">
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email">
         </div>
-    </nav>
+        
+        <div class="form-group">
+          <label for="message">Your Message</label>
+          <textarea id="message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+        </div>
+        
+        <button type="submit" class="btn-primary">Send Message</button>
+        <div class="form-status" id="form-status"></div>
+      </form>
+    </div>
+  </main>
 
-  <!-- Contact Form -->
-  <section class="contact-section">
-    <h1>Contact Us</h1>
-    <form
-      action="https://formspree.io/f/mblkwazy"
-      method="POST"
-      class="contact-form"
-    >
-      <label for="email">Your email:</label>
-      <input type="email" id="email" name="email" required>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 HAYUx CBT. All rights reserved.</p>
+  </footer>
 
-      <label for="message">Your message:</label>
-      <textarea id="message" name="message" rows="5" required></textarea>
+  <script>
+    // Mobile menu toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('show');
+    });
 
-      <button type="submit">Send</button>
-    </form>
-  </section>
- <script src="script.js"></script>
-     <footer>
-        <p>&copy; 2025 HAYUx CBT. All rights reserved.</p>
-    </footer>
+    // Form submission handling
+    const contactForm = document.getElementById('contact-form');
+    const formStatus = document.getElementById('form-status');
+    
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      
+      try {
+        const response = await fetch(contactForm.action, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          formStatus.textContent = 'Message sent successfully!';
+          formStatus.className = 'form-status success';
+          contactForm.reset();
+        } else {
+          formStatus.textContent = 'Oops! There was a problem. Please try again.';
+          formStatus.className = 'form-status error';
+        }
+      } catch (error) {
+        formStatus.textContent = 'Network error. Please check your connection.';
+        formStatus.className = 'form-status error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        
+        // Hide status message after 5 seconds
+        setTimeout(() => {
+          formStatus.style.opacity = '0';
+          setTimeout(() => {
+            formStatus.className = 'form-status';
+            formStatus.style.opacity = '1';
+          }, 300);
+        }, 5000);
+      }
+    });
+  </script>
 </body>
 </html>
