@@ -1,23 +1,35 @@
-// Toggle mobile menu
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = document.querySelector('.nav-links');
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', function () {
+            document.querySelector('.nav-links').classList.toggle('show');
+        });
 
-menuToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('show');
-});
+        // Search functionality
+        const searchBar = document.getElementById('search-bar');
+        const courseCards = document.querySelectorAll('.course-card');
 
-// Live search filter for courses
-const searchBar = document.getElementById('search-bar');
-const courses = document.querySelectorAll('.course-card');
+        searchBar.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
 
-searchBar.addEventListener('input', () => {
-    const searchValue = searchBar.value.toLowerCase();
-    courses.forEach(course => {
-        const courseTitle = course.querySelector('h3').textContent.toLowerCase();
-        if (courseTitle.includes(searchValue)) {
-            course.style.display = '';
-        } else {
-            course.style.display = 'none';
-        }
-    });
-});
+            courseCards.forEach(card => {
+                const courseTitle = card.querySelector('h3').textContent.toLowerCase();
+                if (courseTitle.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Add active class to clicked nav item
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(item => {
+            item.addEventListener('click', function () {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+
+                // Close mobile menu after selection
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.nav-links').classList.remove('show');
+                }
+            });
+        });
