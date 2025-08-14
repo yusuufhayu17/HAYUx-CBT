@@ -1,16 +1,23 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("search-bar");
-    const courseCards = document.querySelectorAll(".course-card");
+// Toggle mobile menu
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
 
-    searchInput.addEventListener("input", function () {
-        const query = searchInput.value.toLowerCase();
+menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+});
 
-        courseCards.forEach(card => {
-            const title = card.querySelector("h3").textContent.toLowerCase();
-            card.style.display = title.includes(query) ? "block" : "none";
-        });
+// Live search filter for courses
+const searchBar = document.getElementById('search-bar');
+const courses = document.querySelectorAll('.course-card');
+
+searchBar.addEventListener('input', () => {
+    const searchValue = searchBar.value.toLowerCase();
+    courses.forEach(course => {
+        const courseTitle = course.querySelector('h3').textContent.toLowerCase();
+        if (courseTitle.includes(searchValue)) {
+            course.style.display = '';
+        } else {
+            course.style.display = 'none';
+        }
     });
 });
-document.querySelector('.menu-toggle').addEventListener('click', function() {
-    document.querySelector('.nav-links').classList.toggle('show');
-  });
