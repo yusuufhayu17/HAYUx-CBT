@@ -2,134 +2,144 @@
 <html lang="en">
 
 <head>
-<script defer data-domain="hayux-cbt.onrender.com" src="https://plausible.io/js/script.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAYUx CBT | Academic Portal</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script defer data-domain="hayux-cbt.onrender.com" src="https://plausible.io/js/script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAYUx CBT | Academic Portal</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- Marquee Banner -->
-    <div class="marquee-container">
-        <i class="fas fa-info-circle"></i>
-        <span>Welcome to HAYUx CBT Practice — PC Access Recommended for Best Results |  You can upload questions pdf for us using the suggest a question in the nav menu</span>
+  <!-- Marquee Banner -->
+  <div class="marquee-container">
+    <i class="fas fa-info-circle"></i>
+    <span>Welcome to HAYUx CBT Practice — PC Access Recommended for Best Results | You can upload questions pdf for us
+      using the suggest a question in the nav menu</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <i class="fas fa-graduation-cap"></i>
+      <span>HAYUx CBT</span>
     </div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">
-            <i class="fas fa-graduation-cap"></i>
-            <span>HAYUx CBT</span>
-        </div>
-
-        <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="search-bar" placeholder="Search courses...">
-        </div>
-
-        <button class="menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-
-        <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="create.html">Create Quiz</a>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSe952o-qahcPcVhStlQPgxSetmyPjYA3_W725NUTfRVNDPuXw/viewform?usp=header"
-                target="_blank">Suggest a Question</a>
-            <a href="contact.html">Contact</a>
-        </div>
-    </nav>
-
-    <!-- Courses Section -->
-    <div class="section-container">
-        <h2 class="section-title">Available Courses</h2>
-        <div class="course-list">
-            <div class="course-card">
-                <h3>ME223 Thermoscience</h3>
-                <a href="https://me223-thermoscience.onrender.com" target="_blank">Go to Course</a>
-            </div>
-            <div class="course-card">
-                <h3>CE222 Strength of Materials</h3>
-                <a href="https://cbt-test-ehsl.onrender.com/" target="_blank">Go to Course</a>
-            </div>
-            <div class="course-card">
-                <h3>GNS222 Peace & Conflict</h3>
-                <a href="https://gns22.onrender.com/" target="_blank">Go to Course</a>
-            </div>
-            <div class="course-card">
-                <h3>CE223 Hydro Mechanics</h3>
-                <a href="https://ce223-cbt.onrender.com" target="_blank">Go to Course</a>
-            </div>
-            <div class="course-card coming-soon">
-                <h3>MTH222 Numerical MethodsII</h3>
-                <a href="https://mth222.onrender.com">Go to Course</a>
-            </div>
-            <div class="course-card coming-soon">
-                <h3>CS121 Introdction to Computer Science 1</h3>
-                <a href="https://cs121-8whv.onrender.com">Go to Course</a>
-            </div>
-            <div class="course-card coming-soon">
-                <h3>CHEM121: General Chemistry II</h3>
-                <a href="https://chem121.onrender.com">Go to Course</a>
-            </div>
-            <div class="course-card coming-soon">
-                <h3>ME226: Material Science</h3>
-                <a href="#">Available Soon</a>
-            </div>
-            <div class="course-card coming-soon">
-                <h3>ME225: Workshop Practice</h3>
-                <a href="#">Available Soon</a>
-            </div>
-            <div class="course-card coming-soon">
-                <h3>Coming Soon</h3>
-                <a href="#">Available Soon</a>
-            </div>
-        </div>
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="search-bar" placeholder="Search courses...">
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 HAYUx CBT. All rights reserved.</p>
-    </footer>
-    <script>
-        // Toggle mobile menu
-        document.querySelector('.menu-toggle').addEventListener('click', function () {
-            document.querySelector('.nav-links').classList.toggle('show');
-        });
+    <button class="menu-toggle">
+      <i class="fas fa-bars"></i>
+    </button>
 
-        // Search functionality
-        const searchBar = document.getElementById('search-bar');
-        const courseCards = document.querySelectorAll('.course-card');
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="create.html">Create Quiz</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSe952o-qahcPcVhStlQPgxSetmyPjYA3_W725NUTfRVNDPuXw/viewform?usp=header"
+        target="_blank">Suggest a Question</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
 
-        searchBar.addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase();
+  <!-- Courses Section -->
+  <div class="section-container">
+    <h2 class="section-title">Available Courses</h2>
+    <div class="course-list">
+      <div class="course-card">
+        <h3>ME223 Thermoscience</h3>
+        <a href="https://me223-thermoscience.onrender.com" target="_blank">Go to Course</a>
+      </div>
+      <div class="course-card">
+        <h3>CE222 Strength of Materials</h3>
+        <a href="https://cbt-test-ehsl.onrender.com/" target="_blank">Go to Course</a>
+      </div>
+      <div class="course-card">
+        <h3>GNS222 Peace & Conflict</h3>
+        <a href="https://gns22.onrender.com/" target="_blank">Go to Course</a>
+      </div>
+      <div class="course-card">
+        <h3>CE223 Hydro Mechanics</h3>
+        <a href="https://ce223-cbt.onrender.com" target="_blank">Go to Course</a>
+      </div>
+      <div class="course-card coming-soon">
+        <h3>MTH222 Numerical MethodsII</h3>
+        <a href="https://mth222.onrender.com">Go to Course</a>
+      </div>
+      <div class="course-card coming-soon">
+        <h3>CS121 Introdction to Computer Science 1</h3>
+        <a href="https://cs121-8whv.onrender.com">Go to Course</a>
+      </div>
+      <div class="course-card coming-soon">
+        <h3>CHEM121: General Chemistry II</h3>
+        <a href="https://chem121.onrender.com">Go to Course</a>
+      </div>
+      <div class="course-card coming-soon">
+        <h3>ME226: Material Science</h3>
+        <a href="https://me226.onrender.com/">Go to Course</a>
+      </div>
+      <div class="course-card coming-soon">
+        <h3>ME225: Workshop Practice</h3>
+        <a href="#">Available Soon</a>
+      </div>
+      <div class="course-card coming-soon">
+        <h3>MTH121: Elementary Algebra II</h3>
+        <a href="#">Available Soon</a>
+      </div>
+    </div>
+    <div class="course-card coming-soon">
+      <h3>GNS121: Use of English II</h3>
+      <a href="#">Available Soon</a>
+    </div>
+    <div class="course-card coming-soon">
+      <h3>GNS221: Nigerian People and Culture</h3>
+      <a href="#">Available Soon</a>
+    </div>
+  </div>
+  </div>
 
-            courseCards.forEach(card => {
-                const courseTitle = card.querySelector('h3').textContent.toLowerCase();
-                if (courseTitle.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 HAYUx CBT. All rights reserved.</p>
+  </footer>
+  <script>
+    // Toggle mobile menu
+    document.querySelector('.menu-toggle').addEventListener('click', function () {
+      document.querySelector('.nav-links').classList.toggle('show');
+    });
 
-        // Add active class to clicked nav item
-        const navItems = document.querySelectorAll('.nav-links a');
-        navItems.forEach(item => {
-            item.addEventListener('click', function () {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
+    // Search functionality
+    const searchBar = document.getElementById('search-bar');
+    const courseCards = document.querySelectorAll('.course-card');
 
-                // Close mobile menu after selection
-                if (window.innerWidth <= 768) {
-                    document.querySelector('.nav-links').classList.remove('show');
-                }
-            });
-        });
-    </script>
+    searchBar.addEventListener('input', function () {
+      const searchTerm = this.value.toLowerCase();
+
+      courseCards.forEach(card => {
+        const courseTitle = card.querySelector('h3').textContent.toLowerCase();
+        if (courseTitle.includes(searchTerm)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Add active class to clicked nav item
+    const navItems = document.querySelectorAll('.nav-links a');
+    navItems.forEach(item => {
+      item.addEventListener('click', function () {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+
+        // Close mobile menu after selection
+        if (window.innerWidth <= 768) {
+          document.querySelector('.nav-links').classList.remove('show');
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
