@@ -113,6 +113,7 @@ nav {
     cursor: pointer;
 }
 
+
 /* Courses Section */
 .course-list {
     display: grid;
@@ -305,5 +306,139 @@ footer {
     footer {
         padding: 3px;
         font-size: 0.6rem;
+    }
+}
+/* Course of the Day Highlight Section */
+.highlight-section {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.highlight-title {
+    text-align: center;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.highlight-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    border-radius: 2px;
+}
+
+.highlighted-course {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 30px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(2, 136, 209, 0.3);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.highlighted-course::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.highlighted-course::after {
+    content: 'Course of the Day';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--accent);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--neutral-900);
+}
+
+.highlighted-course h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.highlighted-course p {
+    margin-bottom: 20px;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+    opacity: 0.9;
+}
+
+.highlighted-course a {
+    display: inline-block;
+    background: white;
+    color: var(--primary-dark);
+    padding: 10px 22px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+    position: relative;
+    z-index: 1;
+    border: 1px solid transparent;
+}
+
+.highlighted-course a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    background: transparent;
+    color: white;
+    border-color: white;
+}
+
+/* Mobile Responsive for Highlight Section */
+@media (max-width: 768px) {
+    .highlighted-course {
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .highlighted-course h3 {
+        font-size: 1.4rem;
+    }
+    
+    .highlighted-course::after {
+        position: relative;
+        top: 0;
+        right: 0;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .highlighted-course {
+        padding: 15px;
+    }
+    
+    .highlighted-course h3 {
+        font-size: 1.2rem;
+    }
+    
+    .highlight-title {
+        font-size: 1.5rem;
     }
 }
