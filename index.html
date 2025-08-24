@@ -9,17 +9,31 @@
   <script defer data-domain="hayux-cbt.onrender.com" src="https://plausible.io/js/script.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HAYUx CBT | Academic Portal</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>HAYUx CBT | Next-Gen Academic Portal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+  <!-- Cyber Grid Background -->
+  <div class="cyber-grid"></div>
+
+  <!-- Floating Elements -->
+  <div class="floating-elements">
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+  </div>
+
   <!-- Marquee Banner -->
   <div class="marquee-container">
     <i class="fas fa-info-circle"></i>
-    <span>MTH122: Comming Soon || Welcome to HAYUx CBT Platform</span>
+    <span>MTH122: Coming in 24hrs|| Welcome to HAYUx CBT Platform</span>
   </div>
+  <br>
+
 
   <!-- Navigation -->
   <nav>
@@ -46,111 +60,121 @@
     </div>
   </nav>
 
-  <!-- Course of the Day Highlight -->
-  <div class="section-container">
-    <div class="highlighted-course">
-      <h3>GNS222 Peace & Conflict</h3>
-      <p>Today's featured course explores the fundamentals of peace studies and conflict resolution. This course is essential for understanding global peace initiatives.</p>
-      <a href="https://gns22.onrender.com/" target="_blank">Go to Course</a>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Transform Your Academic Journey</h1>
+      <p>Access cutting-edge test banks and interactive practice exams with HAYUx CBT - Your portal to academic
+        excellence</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number" data-count="12">0</span>
+          <span class="stat-label">Confirmed Courses</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" id="student-counter">0</span>
+          <span class="stat-label">Active Learners</span>
+          <div class="daily-counter">
+            <i class="fas fa-calendar-day calendar-icon"></i>
+            <span>Weekly Tracking</span>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+    <div class="hero-visual">
+      <div class="visual-container">
+        <div class="main-visual">
+          <div class="cyber-card">📚</div>
+          <div class="cyber-card">✏️</div>
+          <div class="cyber-card">🎯</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Course Section -->
+  <section class="featured-section">
+    <div class="section-title">
+      <h2>Featured Course</h2>
+      <p>Today's highlighted course to boost your learning experience</p>
+    </div>
+    <div class="featured-course">
+      <div class="featured-badge">Course of the Day</div>
+      <br>
+      <br>
+      <h3>MTH122: Calculus II</h3>
+      <p> dives deeper into calculus with techniques of integration, sequences and series, polar
+        and parametric equations, and applications of these ideas. It builds on Calculus I to strengthen problem-solving
+        skills for math, science, and engineering.
+      </p>
+      <a href="#" >Coming Soon</a>
+    </div>
+  </section>
 
   <!-- Courses Section -->
-  <div class="section-container">
-    <h2 class="section-title">Available Courses</h2>
-    <div class="course-list">
+  <section class="courses-section">
+    <div class="section-title">
+      <h2>Available Courses</h2>
+      <p>Browse our comprehensive collection of academic courses</p>
+    </div>
+    <div class="courses-grid">
       <div class="course-card">
         <h3>GNS222 Peace & Conflict</h3>
-        <a href="https://gns22.onrender.com/" target="_blank">Go to Course</a>
+        <a href="https://gns22.onrender.com/" target="_blank">Access Course</a>
       </div>
       <div class="course-card">
         <h3>ME223 Thermoscience</h3>
-        <a href="https://me223-thermoscience.onrender.com" target="_blank">Go to Course</a>
+        <a href="https://me223-thermoscience.onrender.com" target="_blank">Access Course</a>
       </div>
       <div class="course-card">
         <h3>CE222 Strength of Materials</h3>
-        <a href="https://cbt-test-ehsl.onrender.com/" target="_blank">Go to Course</a>
+        <a href="https://cbt-test-ehsl.onrender.com/" target="_blank">Access Course</a>
       </div>
       <div class="course-card">
         <h3>CE223 Hydro Mechanics</h3>
-        <a href="https://ce223-cbt.onrender.com" target="_blank">Go to Course</a>
+        <a href="https://ce223-cbt.onrender.com" target="_blank">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>MTH222 Numerical MethodsII</h3>
-        <a href="https://mth222.onrender.com">Go to Course</a>
+        <a href="https://mth222.onrender.com">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>CS121 Introdction to Computer Science 1</h3>
-        <a href="https://cs121-8whv.onrender.com">Go to Course</a>
+        <a href="https://cs121-8whv.onrender.com">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>CHEM121: General Chemistry II</h3>
-        <a href="https://chem121.onrender.com">Go to Course</a>
+        <a href="https://chem121.onrender.com">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>ME226: Material Science</h3>
-        <a href="https://me226.onrender.com/">Go to Course</a>
+        <a href="https://me226.onrender.com/">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>GNS221: People and Culture</h3>
-        <a href="https://gns221.onrender.com">Go to Course</a>
+        <a href="https://gns221.onrender.com">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>GNS121: Use of English II</h3>
-        <a href="https://gns121-cbt.onrender.com">Go to Course</a>
+        <a href="https://gns121-cbt.onrender.com">Access Course</a>
       </div>
-      <div class="course-card coming-soon">
+      <div class="course-card">
         <h3>MTH121: Elementary Algebra II</h3>
-        <a href="https://mth121.onrender.com">Go to Course</a>
+        <a href="https://mth121.onrender.com">Access Course</a>
       </div>
       <div class="course-card coming-soon">
         <h3>MTH122: Calculus II</h3>
         <a href="#">Available Soon</a>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2025 HAYUx CBT. All rights reserved.</p>
+    <p>&copy; 2025 HAYUx CBT. All rights reserved. | Next-Gen Academic Platform</p>
   </footer>
-  <script>
-    // Toggle mobile menu
-    document.querySelector('.menu-toggle').addEventListener('click', function () {
-      document.querySelector('.nav-links').classList.toggle('show');
-    });
 
-    // Search functionality
-    const searchBar = document.getElementById('search-bar');
-    const courseCards = document.querySelectorAll('.course-card');
-
-    searchBar.addEventListener('input', function () {
-      const searchTerm = this.value.toLowerCase();
-
-      courseCards.forEach(card => {
-        const courseTitle = card.querySelector('h3').textContent.toLowerCase();
-        if (courseTitle.includes(searchTerm)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-
-    // Add active class to clicked nav item
-    const navItems = document.querySelectorAll('.nav-links a');
-    navItems.forEach(item => {
-      item.addEventListener('click', function () {
-        navItems.forEach(nav => nav.classList.remove('active'));
-        this.classList.add('active');
-
-        // Close mobile menu after selection
-        if (window.innerWidth <= 768) {
-          document.querySelector('.nav-links').classList.remove('show');
-        }
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>
