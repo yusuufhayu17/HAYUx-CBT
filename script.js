@@ -69,3 +69,17 @@
       animateCounter();
       updateVisitorCount();
     });
+
+// Overlay handling
+document.addEventListener("DOMContentLoaded", () => {
+  const overlay = document.createElement("div");
+  overlay.id = "overlay";
+  overlay.innerHTML = `<div>🔔 Welcome to HAYUx CBT</div>`;
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+    setTimeout(() => overlay.remove(), 600); // wait for fade-out then remove
+  }, 3000); // 3 seconds
+});
+
