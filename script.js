@@ -57,7 +57,7 @@
     function updateVisitorCount() {
       // MANUALLY SET YOUR VISITOR COUNT HERE
       // Change this number to update the visitor count
-      const manualCount = 2847; // <-- EDIT THIS NUMBER
+      const manualCount = 3200; // <-- EDIT THIS NUMBER
       
       // Update the display
       document.getElementById('student-counter').textContent = manualCount.toLocaleString();
@@ -74,7 +74,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.createElement("div");
   overlay.id = "overlay";
-  overlay.innerHTML = `<div>🔔 Welcome to HAYUx CBT</div>`;
+  overlay.innerHTML = `<div>MTH222 and ME226 Question Updated more coming thanks to the contributors </div>`;
   document.body.appendChild(overlay);
 
   setTimeout(() => {
