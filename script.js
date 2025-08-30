@@ -74,7 +74,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.createElement("div");
   overlay.id = "overlay";
-  overlay.innerHTML = `<div>GNS121: More questions added </div>`;
+  overlay.innerHTML = `<div>MTH121 : Adjusted more question to be added soon </div>`;
   document.body.appendChild(overlay);
 
   setTimeout(() => {
